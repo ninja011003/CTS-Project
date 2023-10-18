@@ -24,7 +24,7 @@ async function addUser(username,email,password){
             return 409; // HTTP status code for conflict
         }
         const document ={
-            username: await encrypt(String(username)),
+            username: await String(username),
             email:await encrypt(String(email)),
             password:await encrypt(String(password))
         }
@@ -54,7 +54,8 @@ async function findUser(email, password) {
         if (user) {
             // console.log('User found');
             const decryptedUser = {
-                username: await decrypt(String(user.username)),
+                _id:user._id,
+                username: await String(user.username),
                 email:await decrypt(String(user.email)),
                 password:await decrypt(String(user.password))
             }

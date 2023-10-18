@@ -4,17 +4,7 @@ const path = require('path')
 const ejs = require('ejs')
 const {addUser,findUser}= require('./FunctionModule/DbFuntions')
 
-require('dotenv').config()
-
-
-// const config = {
-//     authRequired: false,
-//     auth0Logout: true,
-//     secret: process.env.SECRET,
-//     baseURL: process.env.BASEURL,
-//     clientID: process.env.CLIENTID,
-//     issuerBaseURL: process.env.ISSUERBASEURL
-//   };
+require('dotenv').config();
 
 
 const server = express()
@@ -29,37 +19,57 @@ server.use(express.static(path.join(__dirname, 'views')));
 
 
 server.get('/',(req,res)=>{
-    // console.log(req.oidc.isAuthenticated())
-    res.render('index')
+    res.json({
+        response: "server running",
+        status:200
+    })
 })
 
 server.post('/login',async(req,res)=>{
     const response = await findUser(req.body.email,req.body.password);
     if(response.status===200){
-        res.send(response.user);
+        res.json({
+            status:200,
+            message: 'Login Successful.',
+            _id:response.user._id,
+            username:response.user.username
+        });
     }
     else if(response.status===404){
-        res.send('user does not exist.... x_x')
+        res.json({
+            status:404,
+            message:"User not found."
+        })
     }
     else{
-        res.send('error while loggin in..... >_<')
+        res.json({
+            status:500,
+            message: 'Internal server error.'
+        });
     }
 })
 
 server.post('/signup',async(req,res)=>{
     var response = await addUser(req.body.username,req.body.email,req.body.password);
     if(response===201){
-        res.send('user added!!');
+        res.json({
+            status:200,
+            message: 'Registeration Successful.',
+        });
     }
     else if(response===409){
-        res.send('email id already exists, use another email id');
+        res.json({
+            status:409,
+            message: 'email id already exists, use another email id.',
+        });
     }
     else{
-        res.send('error occured during account creation!...');
+        res.json({
+            status:500,
+            message: 'Internal server error.'
+        });
     }
 })
-
-
 
 server.listen(process.env.PORT||PORT,()=>{
     console.log(`server running... on ${PORT}`)
