@@ -2,7 +2,6 @@ const mongodb = require('mongodb')
 const {encrypt,decrypt} = require('./EncryptionFunctions')
 
 require('dotenv').config()
-
 const client = new mongodb.MongoClient(process.env.DBCONNECTURL, {
     serverApi: {
       version: mongodb.ServerApiVersion.v1,
@@ -47,10 +46,11 @@ async function findUser(email, password) {
         const db = client.db('cts-project');
         const collection =db.collection('user-cred');
         const user = await collection.findOne({
-            email:await encrypt(String(email)),
-            password:await encrypt(String(password))
-        });
-
+            email: await encrypt(String(email)),
+            password: await encrypt(String(password))
+          });
+          console.log(await encrypt(String(email)));
+          console.log(await decrypt(await encrypt(String(email))));
         if (user) {
             // console.log('User found');
             const decryptedUser = {
@@ -75,6 +75,12 @@ async function findUser(email, password) {
         await client.close();
     }
 }
+
+async function Media(){
+    const n =await findUser('ninja@gmail.com','12345678');
+    console.log(n);
+}
+Media();
 
 module.exports={
     addUser:addUser,

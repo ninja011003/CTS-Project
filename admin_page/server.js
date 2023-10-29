@@ -2,6 +2,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const ejs = require('ejs')
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const {addUser,findUser}= require('./FunctionModule/DbFuntions')
 
 require('dotenv').config();
@@ -10,6 +12,7 @@ require('dotenv').config();
 const server = express()
 const PORT = 6969;
 server.use(bodyParser.urlencoded({ extended: true }));
+server.use(cors());
 server.set('view engine','ejs')
 server.set('views', path.join(__dirname, 'views'));
 server.use(express.static(path.join(__dirname, 'views')));
@@ -28,8 +31,10 @@ server.get('/',(req,res)=>{
 server.post('/login',async(req,res)=>{
     const response = await findUser(req.body.email,req.body.password);
     if(response.status===200){
+        const token = jwt.sign({ user_id: response.user._id }, process.env.TOKENKEY);
         res.json({
             status:200,
+            token: token,
             message: 'Login Successful.',
             _id:response.user._id,
             username:response.user.username
@@ -74,3 +79,6 @@ server.post('/signup',async(req,res)=>{
 server.listen(process.env.PORT||PORT,()=>{
     console.log(`server running... on ${PORT}`)
 })
+
+
+
