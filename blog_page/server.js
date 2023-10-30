@@ -50,12 +50,23 @@ server.post('/blog/create',upload.single('image'),async(req,res)=>{
     }
 })
 
-server.get('/blog/:blogID',async(req,res)=>{
-    // console.log(req.params.blogID);
-    res.json(await getBlog(req.params.blogID));
+server.get('/blog/:blogID/like',async(req,res)=>{
+    const response= await incrementLikes(req.params.blogID);
+    if(response==-1){
+        res.json({
+            status:500,
+            message:'error occured'
+        })
+    }
+    else{
+        res.json({
+            status:200,
+            message:'updation successfull'
+        })
+    }
 })
 
-server.delete('blog/:blogID',async(req,res)=>{
+server.delete('/blog/:blogID',async(req,res)=>{
     const response = await deleteBlog(req.params.blogID);
     if(response==200){
         res.json({
@@ -71,21 +82,14 @@ server.delete('blog/:blogID',async(req,res)=>{
     }
 })
 
-server.get('blog/:blogID/like',async(req,res)=>{
-    const response= await incrementLikes(req.params.blogID);
-    if(response==-1){
-        res.json({
-            status:500,
-            message:'error occured'
-        })
-    }
-    else{
-        res.json({
-            status:200,
-            message:'updation successfull'
-        })
-    }
+server.get('/blog/:blogID',async(req,res)=>{
+    // console.log(req.params.blogID);
+    res.json(await getBlog(req.params.blogID));
 })
+
+
+
+
 
 server.get('/listout',async(req,res)=>{
     const blogs = await getAllBlogs();

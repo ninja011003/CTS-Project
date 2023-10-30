@@ -102,7 +102,7 @@ async function incrementLikes(blogId) {
 
 async function getBlog(blogID){
   try {
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogID);
 
     if (!blog) {
       return {
