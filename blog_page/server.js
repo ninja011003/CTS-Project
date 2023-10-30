@@ -4,6 +4,8 @@ const path = require('path');
 const ejs = require('ejs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
+const multer = require('multer')
+const {uploadThumbnail,addBlog,getBlog,deleteBlog,incrementLikes,getAllBlogs} =require('./FunctionModules/DbFunction')
 
 
 
@@ -14,18 +16,92 @@ const PORT = 6969;
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(cors());
+const upload = multer();
 
 
+//API's
 
-
-
-
-server.get('/',(req,res)=>{
-    res.status(200).json({
-        message:'hello'
-    })
+server.post('/blog/create',upload.single('image'),async(req,res)=>{
+    try{
+        const imageBuffer = req.file.buffer;
+        const originalFileName = req.file.originalname;
+        const response = await uploadThumbnail(req.file.buffer,req.file.originalname);
+        var thumbnailId=null;
+        if(response.status==200){
+            thumbnailId=response.weblink;
+            res.json({
+                status: await addBlog(req.body.userid,req.body.title,req.body.content,thumbnailId),
+                message: 'uploaded'
+            });
+        }
+        else{
+            res.json({
+                status: 500,
+                message: 'error while uploading blog'
+            });
+        }
+    }
+    catch(err){
+        console.error(err);
+        res.json({
+            status: 500,
+            message: 'error while uploading blog'
+        });
+    }
 })
 
+server.get('/blog/:blogID',async(req,res)=>{
+    // console.log(req.params.blogID);
+    res.json(await getBlog(req.params.blogID));
+})
+
+server.delete('blog/:blogID',async(req,res)=>{
+    const response = await deleteBlog(req.params.blogID);
+    if(response==200){
+        res.json({
+            status:response,
+            message:'deletion successful'
+        })
+    }
+    else{
+        res.json({
+            status:response,
+            message:'error occured while deletion'
+        })
+    }
+})
+
+server.get('blog/:blogID/like',async(req,res)=>{
+    const response= await incrementLikes(req.params.blogID);
+    if(response==-1){
+        res.json({
+            status:500,
+            message:'error occured'
+        })
+    }
+    else{
+        res.json({
+            status:200,
+            message:'updation successfull'
+        })
+    }
+})
+
+server.get('/listout',async(req,res)=>{
+    const blogs = await getAllBlogs();
+    if(blogs.length!=0){
+        res.json({
+            status:200,
+            data:blogs
+        })
+    }
+    else{
+        res.json({
+            status:404,
+            data:[]
+        })
+    }
+})
 
 
 

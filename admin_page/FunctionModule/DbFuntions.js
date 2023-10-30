@@ -1,6 +1,7 @@
 const mongodb = require('mongodb')
 const {encrypt,decrypt} = require('./EncryptionFunctions')
 
+
 require('dotenv').config()
 const client = new mongodb.MongoClient(process.env.DBCONNECTURL, {
     serverApi: {
