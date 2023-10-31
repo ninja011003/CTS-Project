@@ -8,7 +8,9 @@ const { MongoClient,ObjectId } = require("mongodb");
 
 
 // Connect to MongoDB without specifying a database
-mongoose.connect(process.env.DBCONNECTURL, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DBCONNECTURL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB Atlas'))
+  .catch(error => console.error('Error connecting to MongoDB Atlas:', error));
 const db = mongoose.connection.useDb('cts-project');
 const client = new MongoClient(process.env.DBCONNECTURL, {
   useNewUrlParser: true,
@@ -156,7 +158,6 @@ async function getAllBlogs() {
       client.close();
     }
 }
-
 
 async function addBlog(userid,title,content,thumbnail){
     // Create a document

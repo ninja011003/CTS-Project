@@ -79,6 +79,3 @@ server.post('/signup',async(req,res)=>{
 server.listen(process.env.PORT||PORT,()=>{
     console.log(`server running... on ${PORT}`)
 })
-
-
-
