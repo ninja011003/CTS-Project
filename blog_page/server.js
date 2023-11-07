@@ -5,7 +5,7 @@ const ejs = require('ejs');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const multer = require('multer')
-const {uploadThumbnail,addBlog,getBlog,deleteBlog,incrementLikes,getAllBlogs} =require('./FunctionModules/DbFunction')
+const {getUserByEmail,uploadThumbnail,addBlog,getBlog,deleteBlog,incrementLikes,getAllBlogs} =require('./FunctionModules/DbFunction')
 
 
 
@@ -20,6 +20,22 @@ const upload = multer();
 
 
 //API's
+
+server.post('/getRole',async(req,res)=>{
+    const user =  await getUserByEmail(req.body.email);
+    if(user){
+        res.json({
+            status:200,
+            user:user
+        })
+    }
+    else{
+        res.json({
+            status:404,
+            user:null
+        })
+    }
+})
 
 server.post('/blog/create',upload.single('image'),async(req,res)=>{
     try{
@@ -86,6 +102,8 @@ server.get('/blog/:blogID',async(req,res)=>{
     // console.log(req.params.blogID);
     res.json(await getBlog(req.params.blogID));
 })
+
+
 
 
 

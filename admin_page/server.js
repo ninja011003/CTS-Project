@@ -12,6 +12,7 @@ require('dotenv').config();
 const server = express()
 const PORT = 6969;
 server.use(bodyParser.urlencoded({ extended: true }));
+server.use(bodyParser.json());
 server.use(cors());
 server.set('view engine','ejs')
 server.set('views', path.join(__dirname, 'views'));
@@ -29,8 +30,9 @@ server.get('/',(req,res)=>{
 })
 
 server.post('/login',async(req,res)=>{
+    console.log(req.body)
     const response = await findUser(req.body.email,req.body.password);
-    if(response.status===200){
+    if(response.status==200){
         const token = jwt.sign({ user_id: response.user._id }, process.env.TOKENKEY);
         res.json({
             status:200,
@@ -62,7 +64,7 @@ server.post('/signup',async(req,res)=>{
             message: 'Registeration Successful.',
         });
     }
-    else if(response===409){
+    else if(response==409){
         res.json({
             status:409,
             message: 'email id already exists, use another email id.',

@@ -33,8 +33,8 @@ const BlogSchema= new mongoose.Schema({
 })
 
 const BlogUserSchema = new mongoose.Schema({
-  username: String,
-  name:String,
+  email: String,
+  username:String,
   role:String,
 });
 const Blog = db.model('blogs',BlogSchema );
@@ -179,8 +179,26 @@ async function addBlog(userid,title,content,thumbnail){
     }
 }
 
+async function getUserByEmail(email) {
+  try {
+    await client.connect();
+    const database = client.db('cts-project');
+    const collection = database.collection('blog-users');
+
+    const user = await collection.findOne({ email: email });
+    return user;
+  } catch (error) {
+    // Handle any errors that occurred during the query
+    console.error('Error retrieving user by email:', error.message);
+    throw error;
+  } finally {
+    await client.close();
+  }
+}
 
 
+
+main()
 //https://drive.google.com/uc?export=view&id=
 module.exports ={
     addBlog:addBlog,
@@ -188,7 +206,8 @@ module.exports ={
     getBlog:getBlog,
     deleteBlog:deleteBlog,
     incrementLikes:incrementLikes,
-    getAllBlogs:getAllBlogs
+    getAllBlogs:getAllBlogs,
+    getUserByEmail:getUserByEmail
 }
 
  

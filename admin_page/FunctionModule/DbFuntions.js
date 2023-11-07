@@ -50,8 +50,9 @@ async function findUser(email, password) {
             email: await encrypt(String(email)),
             password: await encrypt(String(password))
           });
-          console.log(await encrypt(String(email)));
-          console.log(await decrypt(await encrypt(String(email))));
+          console.log(user)
+        //   console.log(await encrypt(String(email)));
+        //   console.log(await decrypt(await encrypt(String(email))));
         if (user) {
             // console.log('User found');
             const decryptedUser = {
@@ -77,11 +78,11 @@ async function findUser(email, password) {
     }
 }
 
-async function Media(){
-    const n =await findUser('ninja@gmail.com','12345678');
-    console.log(n);
-}
-Media();
+// async function Media(){
+//     const n =await findUser('ninja@gmail.com','12345678');
+//     console.log(n);
+// }
+// Media();
 
 module.exports={
     addUser:addUser,
