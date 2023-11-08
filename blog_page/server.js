@@ -104,11 +104,6 @@ server.get('/blog/:blogID',async(req,res)=>{
 })
 
 
-
-
-
-
-
 server.get('/listout',async(req,res)=>{
     const blogs = await getAllBlogs();
     if(blogs){

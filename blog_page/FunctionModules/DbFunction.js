@@ -198,7 +198,7 @@ async function getUserByEmail(email) {
 
 
 
-main()
+
 //https://drive.google.com/uc?export=view&id=
 module.exports ={
     addBlog:addBlog,
