@@ -1,9 +1,1 @@
-gokul- basic's of Nodejs
-logeshwaran- basic's of Nodejs
-raj mohan- html/css for shopping website
-sriram- basics of html/css
-surya- html/css for shopping website
-parameshwaran- basic's of html/css
-pranavesh-  basic's of Nodejs
-yazeen khan- MongoDb handling via Nodejs
 
